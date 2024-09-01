@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:apiclass/models/users_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,19 +12,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var dataList = [];
-  var dataList1;
+  List<UsersModel> dataList = [];
+  // var dataList1;
   getUsers() async {
     String baseUrl = "https://jsonplaceholder.typicode.com/";
     String endPoint = "users";
     var url = Uri.parse(baseUrl + endPoint+"?ai=2");
     // var response = await http.post(url,body :jsonEncode({}));
-    var response = await http.get(url);
+    var response = await http.get(url );
     if (response.statusCode == 200) {
       var responsedata = jsonDecode(response.body);
       for (var datalis in responsedata) {
         setState(() {
-          dataList.add(datalis);
+          dataList.add(UsersModel.fromJson(datalis));
         });
       }
     } else {
@@ -48,8 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: dataList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text("${dataList[index]["name"]}"),
+                title: Text("${dataList[index].address == null ? '' :dataList[index].address!.geo!.lat}"),
               );
-            }));
+            }),
+            );
   }
 }
